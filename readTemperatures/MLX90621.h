@@ -1,3 +1,5 @@
+
+
 /*
  * MLX90621.h
  *
@@ -12,7 +14,7 @@
 
 //Libraries to be included
 #include <Arduino.h>
-#include <i2c_t3.h>
+#include <Wire.h>
 
 //Begin registers
 #define CAL_ACOMMON_L 0xD0
@@ -58,7 +60,7 @@ private:
 	byte eepromData[256]; //Contains the full EEPROM reading from the MLX90621
 	int16_t a_common, a_i_scale, b_i_scale, k_t1_scale, k_t2_scale, resolution, cpix, ptat;
 	float k_t1, k_t2, emissivity, tgc, alpha_cp, a_cp, b_cp, v_th;
-	float a_ij[64], b_ij[64], alpha_ij[64];
+	float a_ij, b_ij, alpha_ij;
 	byte loopCount = 0; //Used in main loop
 
 	/* Methods */

@@ -1,3 +1,5 @@
+//#include <SPI.h>
+
 /*
 * A class for interfacing the Melexis 90620 Sensor from a Teensy 3.1
 * Uses the 2c_t3 library for communication with the sensor
@@ -22,19 +24,24 @@
  */
 
 #include <Arduino.h>
-#include <i2c_t3.h>
+#include <Wire.h>
 #include "MLX90621.h"
+//#include <Adafruit_GFX.h>
+//#include <Adafruit_ST7735.h>
 
 MLX90621 sensor; // create an instance of the Sensor class
 
 void setup(){ 
   Serial.begin(19200);
-  Serial.println("trying to initialize sensor...");
-  sensor.initialise (16); // start the thermo cam with 8 frames per second
-  Serial.println("sensor initialized!");
+  Serial.println("try init");
+  sensor.initialise (1); // start the thermo cam with 8 frames per second
+  Serial.println("init success");
 }
 void loop(){
   sensor.measure(); //get new readings from the sensor
+  Serial.print("Ambient:");
+  Serial.print(sensor.getAmbient());
+  Serial.print("\n");
   for(int y=0;y<4;y++){ //go through all the rows
     Serial.print("[");
     
@@ -45,9 +52,9 @@ void loop(){
       if (x<15) Serial.print(",");
     }
     Serial.print("]");
-    if (y<3)Serial.print("~"); 
+    if (y<3)Serial.print("\n"); 
   }
-  Serial.print("\n");
+  Serial.print("\n\n");
   delay(31);
 };
 
