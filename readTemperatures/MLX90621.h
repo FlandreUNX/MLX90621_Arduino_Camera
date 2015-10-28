@@ -28,6 +28,7 @@
 #define CAL_AI_SCALE 0xD9
 #define CAL_BI_SCALE 0xD9
 
+
 #define VTH_L 0xDA
 #define VTH_H 0xDB
 #define KT1_L 0xDC

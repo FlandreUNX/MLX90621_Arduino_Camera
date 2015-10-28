@@ -1,4 +1,6 @@
-//#include <SPI.h>
+#include <SPI.h>
+
+
 
 /*
 * A class for interfacing the Melexis 90620 Sensor from a Teensy 3.1
@@ -26,33 +28,39 @@
 #include <Arduino.h>
 #include <Wire.h>
 #include "MLX90621.h"
-//#include <Adafruit_GFX.h>
-//#include <Adafruit_ST7735.h>
+#include <Adafruit_GFX.h>
+#include <Adafruit_ST7735.h>
+
+#define TFT_CS 10
+#define TFT_RST 0
+#define TFT_DC 8
+
+Adafruit_ST7735 tft = Adafruit_ST7735(TFT_CS, TFT_DC, TFT_RST);
+
+#define TFT_SCLK 13
+#define TFT_MOSI 11
 
 MLX90621 sensor; // create an instance of the Sensor class
 
-void setup(){ 
-  Serial.begin(19200);
-  Serial.println("try init");
+void setup(){
+  tft.initR(INITR_BLACKTAB);
+  tft.fillScreen(ST7735_BLACK);
   sensor.initialise (1); // start the thermo cam with 8 frames per second
-  Serial.println("init success");
 }
 void loop(){
   sensor.measure(); //get new readings from the sensor
-  Serial.print("Ambient:");
-  Serial.print(sensor.getAmbient());
-  Serial.print("\n");
   for(int y=0;y<4;y++){ //go through all the rows
     Serial.print("[");
-    
+
     for(int x=0;x<16;x++){ //go through all the columns
       double tempAtXY= sensor.getTemperature(y+x*4); // extract the temperature at position x/y
-      Serial.print(tempAtXY);
-         
+      tft.fillRect(10, 10, 10*x, 10*y, (uint16_t) tempAtXY);
+
+
       if (x<15) Serial.print(",");
     }
     Serial.print("]");
-    if (y<3)Serial.print("\n"); 
+    if (y<3)Serial.print("\n");
   }
   Serial.print("\n\n");
   delay(31);

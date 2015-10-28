@@ -175,6 +175,7 @@ void MLX90621::calculateTO() {
 }
 
 
+
 void MLX90621::readIR() {
   for(int j=0;j<64;j+=16) { // Read in blocks of 32 bytes to overcome Wire buffer limit   
     Wire.beginTransmission(0x60);
