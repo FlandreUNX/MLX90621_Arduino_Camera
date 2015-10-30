@@ -1,30 +1,16 @@
-#include <SPI.h>
-
-
 
 /*
-* A class for interfacing the Melexis 90620 Sensor from a Teensy 3.1
-* Uses the 2c_t3 library for communication with the sensor
+* This project creates a small thermal camera using the MELEXIS MLX90621
+*
+* Adapted by Josh Long (https://github.com/longjos) Oct 2015
+* Based on a https://github.com/robinvanemden/MLX90621_Arduino_Processing
+*
+* Original work by:
 * 2013 by Felix Bonowski
 * Based on a forum post by maxbot: http://forum.arduino.cc/index.php/topic,126244.msg949212.html#msg949212
 * This code is in the public domain.
-*
-* Connection Instructions:
-* Connect the Anode of a Silicon Diode to 3V Pin of Teensy. The Diode will drop ~0.7V, so the Cathode will be at ~2.7V. These 2.7V will be the supply voltage "VDD" for the sensor.
-* Plug in the USB and measure the supply voltage with a multimeter! - it should be somewhere between 2.5V and 2.75V, else it will fry your precious sensor...
-* ...disconnect USB again...
-* Connect Teensy Pin 18 to 2.7V with a 4.7kOhm Resistor (Pullup)
-* Connect Teensy Pin 19 to 2.7V with a 4.7kOhm Resistor (Pullup)
-* Connect Teensy Pin 18 to I2C Data (SDA) Pin of Sensor
-* Connect Teensy Pin 19 to I2C clock (SCL) Pin of Sensor
-* Connect GND and 2.7V with a 100nF ceramic Capacitor.
-* Connect the VSS Pin of the Sensor to GND.
-* Connect the VDD Pin of the Sensor to 2.7V
-
- *  Created on: 9.7.2015
- *      Author: Robin van Emden
- */
-
+*/
+#include <SPI.h>
 #include <Arduino.h>
 #include <Wire.h>
 #include "MLX90621.h"
@@ -45,25 +31,28 @@ MLX90621 sensor; // create an instance of the Sensor class
 void setup(){
   tft.initR(INITR_BLACKTAB);
   tft.fillScreen(ST7735_BLACK);
-  sensor.initialise (1); // start the thermo cam with 8 frames per second
-}
+  sensor.initialise (4);
+ }
 void loop(){
-  sensor.measure(); //get new readings from the sensor
+  sensor.measure(true); //get new readings from the sensor
+  tft.setTextColor(ST7735_RED);
   for(int y=0;y<4;y++){ //go through all the rows
-    Serial.print("[");
 
     for(int x=0;x<16;x++){ //go through all the columns
-      double tempAtXY= sensor.getTemperature(y+x*4); // extract the temperature at position x/y
-      tft.fillRect(10, 10, 10*x, 10*y, (uint16_t) tempAtXY);
-
-
-      if (x<15) Serial.print(",");
+      int16_t valueAtXY= sensor.irData[y+x*4]; // extract the temperature at position x/y
+      tft.fillRect(32*y, 10*x, 32, 10, (uint16_t) valueAtXY);
+      tft.setCursor(32*y, 10*x);
+      tft.print(sensor.getTemperature(y+x*4));
+      //tft.print(sensor.irData[y+x*4]);
     }
-    Serial.print("]");
-    if (y<3)Serial.print("\n");
   }
-  Serial.print("\n\n");
-  delay(31);
+  //tft.setCursor(10, 10);
+  //tft.print(sensor.getAmbient());
+  //tft.print(sensor.ptat);
+  //tft.print(sensor.cpix);
+  //tft.setCursor(10, 20);
+  //tft.print(sensor.a_common);
+  //delay(31);
 };
 
 
