@@ -140,6 +140,7 @@ void MLX90621::preCalculateConstants() {
 void MLX90621::calculateTO() {
 	float v_cp_off_comp = (float) cpix - (a_cp + b_cp * (Tambient - 25.0));
 	tak4 = pow((float) Tambient + 273.15, 4.0);
+	minTemp, maxTemp = NULL;
 	for (int i = 0; i < 64; i++) {
 		a_ij = ((float) a_common + eepromData[i] * pow(2.0, a_i_scale)) / resolution_comp;
 		b_ij = (float) twos_8(eepromData[0x40 + i]) / (pow(2.0, b_i_scale) * resolution_comp);
@@ -153,8 +154,24 @@ void MLX90621::calculateTO() {
 		alpha_comp = (alpha_ij - tgc * alpha_cp);  	// For my MLX90621 the ksta calibrations were 0
 													// so I can ignore them and save a few cycles
 		v_ir_comp = v_ir_tgc_comp / emissivity;
-		temperatures[i] = pow((v_ir_comp / alpha_comp) + tak4, 1.0 / 4.0) - 274.15;
+		float temperature = pow((v_ir_comp / alpha_comp) + tak4, 1.0 / 4.0) - 274.15;
+
+		temperatures[i] = temperature;
+		if (minTemp == NULL || temperature < minTemp) {
+			minTemp = temperature;
+		}
+		if (maxTemp == NULL || temperature > maxTemp) {
+			maxTemp = temperature;
+		}
 	}
+}
+
+float MLX90621::getMinTemp() {
+	return minTemp;
+}
+
+float MLX90621::getMaxTemp() {
+	return maxTemp;
 }
 
 
