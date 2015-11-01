@@ -51,7 +51,7 @@ void loop(){
     for(int x=0;x<16;x++){ //go through all the columns
       int16_t valueAtXY= sensor.irData[y+x*4]; // extract the temperature at position x/y
       tft.fillRect(28*y, 10*x, 28, 10, getScaleValue(sensor.getTemperature(y+x*4), sensor.getMinTemp(), sensor.getMaxTemp()));
-      //tft.setCursor(32*y, 10*x);
+      //tft.setCursor(28*y, 10*x);
       //tft.print(sensor.getTemperature(y+x*4));
       //tft.print(sensor.irData[y+x*4]);
     }

@@ -140,7 +140,7 @@ void MLX90621::preCalculateConstants() {
 void MLX90621::calculateTO() {
 	float v_cp_off_comp = (float) cpix - (a_cp + b_cp * (Tambient - 25.0));
 	tak4 = pow((float) Tambient + 273.15, 4.0);
-	minTemp, maxTemp = NULL;
+	minTemp = NULL, maxTemp = NULL;
 	for (int i = 0; i < 64; i++) {
 		a_ij = ((float) a_common + eepromData[i] * pow(2.0, a_i_scale)) / resolution_comp;
 		b_ij = (float) twos_8(eepromData[0x40 + i]) / (pow(2.0, b_i_scale) * resolution_comp);
