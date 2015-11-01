@@ -216,7 +216,7 @@ void MLX90621::readCPIX() {
 	Wire.requestFrom(0x60, 2);
 	byte cpixLow = Wire.read();
 	byte cpixHigh = Wire.read();
-	cpix = ( cpixHigh * 256 ) + cpixLow;
+	cpix = twos_16(cpixHigh, cpixLow);
 }
 
 int16_t MLX90621::twos_16(uint8_t highByte, uint8_t lowByte){

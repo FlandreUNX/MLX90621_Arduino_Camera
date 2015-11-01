@@ -31,7 +31,7 @@ MLX90621 sensor; // create an instance of the Sensor class
 void setup(){
   tft.initR(INITR_BLACKTAB);
   tft.fillScreen(ST7735_BLACK);
-  sensor.initialise (8);
+  sensor.initialise (4);
  }
 void loop(){
   sensor.measure(true); //get new readings from the sensor
@@ -50,8 +50,10 @@ void loop(){
 
     for(int x=0;x<16;x++){ //go through all the columns
       int16_t valueAtXY= sensor.irData[y+x*4]; // extract the temperature at position x/y
-      tft.fillRect(28*y, 10*x, 28, 10, getScaleValue(sensor.getTemperature(y+x*4), sensor.getMinTemp(), sensor.getMaxTemp()));
+      uint16_t color = getScaleValue(sensor.getTemperature(y+x*4), sensor.getMinTemp(), sensor.getMaxTemp());
+      tft.fillRect(28*y, 10*x, 28, 10, color);
       //tft.setCursor(28*y, 10*x);
+      //tft.print(color);
       //tft.print(sensor.getTemperature(y+x*4));
       //tft.print(sensor.irData[y+x*4]);
     }
@@ -66,8 +68,8 @@ void loop(){
 };
 
 float getScaleValue(float temp, float minTemp, float maxTemp){
-  uint8_t scale = ((minTemp - maxTemp) / -32.0)*(temp) + (-1.0) * (minTemp - maxTemp)/(-32.0);
-  uint16_t color = scale << 11 | scale << 6 | scale;
+  uint8_t scale = (31.0 / (maxTemp - minTemp))*(temp) + (-1.0) * minTemp * (31.0)/(maxTemp - minTemp);
+  uint16_t color = scale << 11 | scale << 6 | 1 << 5 | scale;
   return color;
 }
 
