@@ -6,5 +6,8 @@ Arduino project to create a small thermal camera using:
  * A Melexis [MLX90621](http://www.melexis.com/Infrared-Thermometer-Sensors/Infrared-Thermometer-Sensors/Low-noise-high-speed-16x4-Far-Infrared-array-823.aspx) 16x4 thermopile array.
  * An AdaFruit [1.8 " Color TFT Display](https://www.adafruit.com/products/358)
 
+I will be writing up the progress in the wiki:
+[https://github.com/longjos/MLX90621_Arduino_Camera/wiki/Prototyping]
+
 
 The sensor code is an adaption of the work from this project: https://github.com/robinvanemden/MLX90621_Arduino_Processing
